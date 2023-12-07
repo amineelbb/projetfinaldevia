@@ -1,0 +1,62 @@
+
+
+# # Utilisation d'une image Python officielle en tant que base
+# FROM python:3.9
+
+# # Définition du répertoire de travail dans le conteneur
+# WORKDIR /app
+
+# # Copie des fichiers nécessaires (requirements.txt, gestionnaire de paquets, etc.)
+# COPY requirements.txt /app/
+
+# # Installation des dépendances Python
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# # Copie de tout le code dans le répertoire de travail du conteneur
+# COPY . /app/
+
+# # Exécution des commandes de collecte statique pour les fichiers Django
+# RUN python manage.py collectstatic --noinput
+
+
+# # Exposer le port sur lequel l'application fonctionne
+# EXPOSE 8000
+
+# # Commande pour démarrer l'application Django
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+# Utilisation de l'image Python officielle comme base
+# FROM python:3.9
+
+# Utiliser une image Python officielle comme image de base
+FROM python:3.9
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /app
+
+
+# Copier les fichiers 'requirements.txt' dans le répertoire de travail
+COPY requirements.txt /app/
+
+# Installer les dépendances
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copier le reste du code de l'application dans le répertoire de travail
+COPY . /app/
+
+# Définir la variable d'environnement pour exécuter Django en mode production
+ENV DJANGO_SETTINGS_MODULE=myapp.settings.production
+
+# Collecter les fichiers statiques
+RUN python manage.py collectstatic --noinput
+
+RUN python manage.py migrate
+
+# Exposer le port sur lequel l'application va s'exécuter
+EXPOSE 8000
+
+# Commande pour démarrer l'application avec Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myapp.wsgi:application"]
