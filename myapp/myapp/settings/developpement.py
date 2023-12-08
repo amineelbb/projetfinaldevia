@@ -2,7 +2,7 @@ from .base import *
 from dotenv import load_dotenv
 load_dotenv()
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', default='secretki')
 CSRF_TRUSTED_ORIGINS = ["https://*.webappamine.azurewebsites.net"] 
 
 
