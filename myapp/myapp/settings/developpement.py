@@ -6,7 +6,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 CSRF_TRUSTED_ORIGINS = ["https://*.webappamine.azurewebsites.net"] 
 
 
-DEBUG=False
+DEBUG=True
 
 DATABASES ={
     'default': {
